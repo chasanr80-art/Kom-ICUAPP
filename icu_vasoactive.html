@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ICU Vasoactive">
+<title>ICU Vasoactive</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:#0f172a;color:#f1f5f9;min-height:100vh;padding:16px 16px 40px}
+.wrap{max-width:420px;margin:auto}
+.hdr{text-align:center;padding:12px 0 4px}
+.hdr h1{font-size:20px;font-weight:600;color:#f1f5f9}
+.hdr p{font-size:13px;color:#60a5fa;margin-top:4px;font-style:italic}
+.card{background:#1e293b;border-radius:14px;padding:14px;margin-top:12px;border:.5px solid #334155}
+.clbl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#94a3b8;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+label{font-size:13px;color:#94a3b8;display:block;margin-bottom:4px}
+input,select{width:100%;padding:12px 14px;background:#0f172a;border:1px solid #334155;border-radius:9px;color:#f1f5f9;font-size:16px;-webkit-appearance:none;appearance:none;outline:none;height:46px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+input:focus,select:focus{border-color:#3b82f6;background:#1e293b}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gbtn{width:100%;margin-top:10px;padding:13px;background:#1d4ed8;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer}
+.ibtn{font-size:13px;color:#94a3b8;background:#0f172a;border:1px solid #334155;border-radius:7px;padding:5px 12px;cursor:pointer}
+.ibtns{display:flex;gap:6px}
+.fbox{border-radius:12px;padding:18px;text-align:center;background:#0f172a;transition:background .3s,color .3s}
+.fnum{font-size:48px;font-weight:700;line-height:1}
+.funit{font-size:16px;font-weight:700;opacity:.9}
+.fgamma{font-size:16px;font-weight:700;opacity:.9}
+.fbadge{font-size:16px;font-weight:700;padding:4px 14px;border-radius:20px}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;justify-content:center;align-items:flex-end}
+.ov.open{display:flex}
+.sh{background:#1e293b;border-radius:20px 20px 0 0;padding:20px 20px 36px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;border-top:.5px solid #334155}
+.shhnd{width:36px;height:4px;background:#475569;border-radius:2px;margin:0 auto 16px}
+.sh h2{font-size:17px;font-weight:600;margin-bottom:14px;color:#f1f5f9}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:9px;margin-bottom:6px;font-size:14px}
+.rrow.act{font-weight:700}
+.iblk{font-size:14px;line-height:1.7;color:#cbd5e1}
+.iblk b{color:#f1f5f9}
+.cbtn{width:100%;margin-top:16px;padding:12px;background:#334155;color:#f1f5f9;border:none;border-radius:10px;font-size:15px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>🫀 ΚΑΡΔΙΟΛΟΓΙΑ ΚΟΜΟΤΗΝΗΣ</h1>
+    <p>by Dr. med. Ritvan Chasan</p>
+  </div>
+
+  <div class="card">
+    <div class="clbl">
+      <span>Φάρμακο</span>
+      <div class="ibtns">
+        <button class="ibtn" id="btnI">i</button>
+        <button class="ibtn" id="btnR">❓</button>
+      </div>
+    </div>
+    <select id="drug">
+      <option value="NE">Noradrenaline</option>
+      <option value="DOB">Dobutamine</option>
+      <option value="DOP">Dopamine</option>
+      <option value="ISO">Isoproterenol</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="clbl">Σχήμα παρασκευής</div>
+    <div style="margin-bottom:10px"><label>Όγκος (ml)</label><input type="number" id="ml" value="250" min="1"></div>
+    <div class="r2">
+      <div><label>Φιαλίδια</label><input type="number" id="flc" value="5" min="1"></div>
+      <div><label>mg / φιαλίδιο</label><input type="number" id="mg" value="1" min="0.01" step="0.01"></div>
+    </div>
+    <button class="gbtn" id="btnP">⚡ Load Komotini Preset</button>
+  </div>
+
+  <div class="card">
+    <div class="clbl">Ασθενής</div>
+    <div class="r2">
+      <div><label>Βάρος (kg)</label><input type="number" id="weight" value="70" min="1"></div>
+      <div>
+        <label style="text-align:center;display:block">Δόση γ (Gamma)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="gamma" style="flex:1;min-width:0"></select>
+          <input type="number" id="gman" min="0" step="0.01" placeholder="manuel" style="width:82px;text-align:center;flex-shrink:0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="clbl">Αποτέλεσμα</div>
+    <div style="font-size:14px;color:#94a3b8;margin-bottom:10px">Συγκέντρωση: <span id="conc" style="color:#f1f5f9;font-weight:600">—</span> μg/ml</div>
+    <div class="fbox" id="fbox">
+      <div style="display:flex;align-items:baseline;justify-content:center;gap:8px">
+        <span class="fnum" id="flow">—</span>
+        <span class="funit">ml / ώρα</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap">
+        <span class="fgamma" id="gline">—</span>
+        <span style="opacity:.4;font-size:16px">|</span>
+        <span class="fbadge" id="badge">—</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovI">
+  <div class="sh">
+    <div class="shhnd"></div>
+    <h2 id="iTitle"></h2>
+    <div class="iblk" id="iBody"></div>
+    <button class="cbtn" id="closeI">Κλείσιμο</button>
+  </div>
+</div>
+
+<div class="ov" id="ovR">
+  <div class="sh">
+    <div class="shhnd"></div>
+    <h2 id="rTitle"></h2>
+    <div id="rBody"></div>
+    <button class="cbtn" id="closeR">Κλείσιμο</button>
+  </div>
+</div>
+
+<script>
+(function(){
+var D={
+  NE:{name:"Noradrenaline",g:[0.02,0.04,0.06,0.08,0.1,0.12,0.14,0.16,0.18,0.2,0.22,0.24,0.26,0.28,0.3],star:0.06,tgt:[0.06,0.3],max:1,pre:{ml:250,flc:5,mg:1},
+    info:{title:"Noradrenaline (Norepinephrine)",body:"<b>Μηχανισμός δράσης</b><br>Ισχυρός αγωνιστής α1/α2. Αυξάνει SVR και MAP χωρίς σημαντική αύξηση HR.<br><br><b>Ενδείξεις</b><br>Σηπτική καταπληξία (1η γραμμή) · Αναφυλαξία · Νευρογενής καταπληξία<br><br><b>Στόχος MAP</b><br>≥ 65 mmHg (septic shock) · ≥ 80 mmHg (ΧΝΑ)<br><br><b>Αντενδείξεις</b><br>Υποογκαιμία · Θρόμβωση μεσεντέριων αγγείων<br><br><b>Παρενέργειες</b><br>Βραδυκαρδία · Ισχαιμία άκρων · Νέκρωση σε εξαγγείωση<br><br><b>Αλληλεπιδράσεις</b><br>MAOIs → υπερτασική κρίση"},
+    ranges:[{r:"0.02–0.05",l:"Χαμηλό",c:"warn"},{r:"0.05–0.3",l:"Στόχος ✓",c:"safe"},{r:"0.3–0.8",l:"Σοβαρό shock",c:"high"},{r:">0.8",l:"Επικίνδυνο",c:"danger"}]},
+  DOB:{name:"Dobutamine",g:[2,3,4,6,8,10,12,14,16,18,20,22,24],star:6,tgt:[5,10],max:20,pre:{ml:250,flc:2,mg:250},
+    info:{title:"Dobutamine",body:"<b>Μηχανισμός δράσης</b><br>β1 αγωνιστής → ↑ CO, ↑ HR, ↑ συσταλτικότητα. Ήπια β2 → ↓ SVR.<br><br><b>Ενδείξεις</b><br>Καρδιογενής καταπληξία · Οξεία καρδιακή ανεπάρκεια<br><br><b>Στόχος</b><br>CI > 2.2 L/min/m² · ScvO2 > 70%<br><br><b>Αντενδείξεις</b><br>Υπερτροφική αποφρακτική μυοκαρδιοπάθεια · Κολπική μαρμαρυγή<br><br><b>Παρενέργειες</b><br>Ταχυκαρδία · Αρρυθμίες · Υπόταση<br><br><b>Αλληλεπιδράσεις</b><br>β-αναστολείς → μειωμένη αποτελεσματικότητα"},
+    ranges:[{r:"2–5",l:"Χαμηλό",c:"warn"},{r:"5–10",l:"Στόχος ✓",c:"safe"},{r:"10–20",l:"Υψηλό",c:"high"},{r:">20",l:"Επικίνδυνο",c:"danger"}]},
+  DOP:{name:"Dopamine",g:[1,2,4,6,8,10,12,14,16,18,20,22,24],star:6,tgt:[3,10],max:20,pre:{ml:250,flc:3,mg:50},
+    info:{title:"Dopamine",body:"<b>Dose dependent</b><br><b>1–3 γ:</b> νεφρική αγγειοδιαστολή<br><b>3–10 γ:</b> β1 → ↑ CO, ↑ HR<br><b>&gt;10 γ:</b> α1 → ↑ SVR<br><br><b>Ενδείξεις</b><br>Καρδιογενής/σηπτική καταπληξία (2η γραμμή)<br><br><b>Αντενδείξεις</b><br>Φαιοχρωμοκύττωμα · Κοιλιακή ταχυκαρδία<br><br><b>Παρενέργειες</b><br>Ταχυαρρυθμίες · Ναυτία · Νέκρωση σε εξαγγείωση"},
+    ranges:[{r:"1–3",l:"Νεφρική δόση",c:"warn"},{r:"3–10",l:"Ινότροπος (στόχος ✓)",c:"safe"},{r:"10–20",l:"Αγγειοσυσταλτικό",c:"high"},{r:">20",l:"Επικίνδυνο",c:"danger"}]},
+  ISO:{name:"Isoproterenol",g:[0.01,0.02,0.03,0.04,0.05,0.06,0.08,0.1],star:0.06,tgt:[0.04,0.06],max:0.2,pre:{ml:250,flc:10,mg:0.2},
+    info:{title:"Isoproterenol",body:"<b>Μηχανισμός δράσης</b><br>Μη εκλεκτικός β αγωνιστής (β1+β2). ↑ HR, ↑ CO, ↓ SVR, ↓ MAP.<br><br><b>Ενδείξεις</b><br>Βραδυκαρδία · ΑV block 2ου/3ου βαθμού · Torsades de Pointes<br><br><b>Στόχος HR</b><br>60–100 bpm<br><br><b>Αντενδείξεις</b><br>Ταχυαρρυθμίες · Σοβαρή ΣΝ<br><br><b>Παρενέργειες</b><br>Σοβαρή ταχυκαρδία · Αρρυθμίες · Υπόταση λόγω ↓ SVR"},
+    ranges:[{r:"0.01–0.02",l:"Χαμηλό",c:"warn"},{r:"0.02–0.05",l:"Στόχος ✓",c:"safe"},{r:"0.05–0.1",l:"Υψηλό",c:"high"},{r:">0.1",l:"Επικίνδυνο",c:"danger"}]}
+};
+var ST={safe:{bg:"#022c22",col:"#22c55e",lbl:"✓ ΑΣΦΑΛΗΣ ΔΟΣΗ"},warn:{bg:"#78350f",col:"#eab308",lbl:"⚠ ΧΑΜΗΛΟ — ΠΡΟΣΟΧΗ"},high:{bg:"#7c2d12",col:"#fb923c",lbl:"⚠ ΥΨΗΛΟ — ΠΡΟΣΟΧΗ"},danger:{bg:"#7f1d1d",col:"#ef4444",lbl:"✖ ΕΠΙΚΙΝΔΥΝΟ"}};
+var RC={safe:{bg:"#022c22",col:"#22c55e"},warn:{bg:"#78350f",col:"#eab308"},high:{bg:"#7c2d12",col:"#fb923c"},danger:{bg:"#7f1d1d",col:"#ef4444"}};
+function $i(id){return document.getElementById(id);}
+function key(){return $i("drug").value;}
+function setGamma(){
+  var d=D[key()],el=$i("gamma");
+  el.innerHTML="";
+  for(var i=0;i<d.g.length;i++){var o=document.createElement("option");o.value=d.g[i];o.text=(d.g[i]===d.star)?d.g[i]+" ⭐":String(d.g[i]);el.appendChild(o);}
+  el.value=d.star;
+  $i("gman").value=d.star;
+}
+function getG(){var m=parseFloat($i("gman").value);return(!isNaN(m)&&m>0)?m:parseFloat($i("gamma").value);}
+function calc(){
+  var d=D[key()];
+  var ml=parseFloat($i("ml").value)||0,flc=parseFloat($i("flc").value)||0,mg=parseFloat($i("mg").value)||0,wt=parseFloat($i("weight").value)||0,g=getG();
+  if(!ml||!flc||!mg||!wt||!g)return;
+  var conc=(flc*mg*1000)/ml,flow=(g*wt*60)/conc;
+  $i("conc").textContent=conc.toFixed(1);
+  $i("flow").textContent=flow.toFixed(1);
+  $i("gline").textContent=g+" μg/kg/min";
+  var st;
+  if(g>d.max)st="danger";
+  else if(g>=d.max*0.8)st="high";
+  else if(g>d.tgt[1])st="high";
+  else if(g>=d.tgt[0]&&g<=d.tgt[1])st="safe";
+  else st="warn";
+  var s=ST[st],fb=$i("fbox");
+  fb.style.background=s.bg;fb.style.color=s.col;
+  var b=$i("badge");b.textContent=s.lbl;b.style.background=s.bg;b.style.color=s.col;b.style.border="1px solid "+s.col+"44";
+}
+function loadPreset(){var p=D[key()].pre;$i("ml").value=p.ml;$i("flc").value=p.flc;$i("mg").value=p.mg;setGamma();calc();}
+function showInfo(){var d=D[key()];$i("iTitle").textContent=d.info.title;$i("iBody").innerHTML=d.info.body;$i("ovI").classList.add("open");}
+function showRanges(){
+  var d=D[key()],g=getG();
+  $i("rTitle").textContent=d.name+" — Εύρη δόσης";
+  var html="";
+  for(var i=0;i<d.ranges.length;i++){
+    var r=d.ranges[i],active=false;
+    if(r.r.indexOf("–")!==-1){var pts=r.r.split("–");active=g>=parseFloat(pts[0])&&g<=parseFloat(pts[1]);}
+    else{active=g>parseFloat(r.r.replace(">",""));}
+    var rc=RC[r.c],bg=active?rc.bg:"#0f172a",col=active?rc.col:"#94a3b8";
+    html+='<div class="rrow'+(active?" act":"")+'" style="background:'+bg+';color:'+col+'"><span>'+r.r+' μg/kg/min</span><span>'+r.l+(active?" ←":"")+'</span></div>';
+  }
+  $i("rBody").innerHTML=html;
+  $i("ovR").classList.add("open");
+}
+$i("drug").onchange=function(){setGamma();loadPreset();};
+$i("btnP").onclick=loadPreset;
+$i("btnI").onclick=showInfo;
+$i("btnR").onclick=showRanges;
+$i("closeI").onclick=function(){$i("ovI").classList.remove("open");};
+$i("closeR").onclick=function(){$i("ovR").classList.remove("open");};
+$i("ovI").onclick=function(e){if(e.target===this)this.classList.remove("open");};
+$i("ovR").onclick=function(e){if(e.target===this)this.classList.remove("open");};
+$i("gamma").onchange=function(){$i("gman").value=this.value;calc();};
+$i("gman").oninput=function(){if(!isNaN(parseFloat(this.value))&&parseFloat(this.value)>0)$i("gamma").selectedIndex=-1;calc();};
+["ml","flc","mg","weight"].forEach(function(id){$i(id).oninput=calc;});
+setGamma();calc();
+})();
+</script>
+</body>
+</html>
